@@ -7,14 +7,14 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Sql("/artikels.sql")
 class ArtikelControllerTest extends AbstractTransactionalJUnit4SpringContextTests {
-    private final static String ARTIKELS = "artikels";
+//    private final static String ARTIKELS = "artikels";
     private final MockMvc mockMvc;
 
     public ArtikelControllerTest(MockMvc mockMvc) {
