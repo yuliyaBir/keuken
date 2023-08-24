@@ -1,7 +1,10 @@
 package be.vdab.keuken.services;
 
 import be.vdab.keuken.domain.Artikel;
+import be.vdab.keuken.dto.NieuweArtikel;
+import be.vdab.keuken.exceptions.ArtikelBestaatAlException;
 import be.vdab.keuken.repositories.ArtikelRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,5 +20,15 @@ public class ArtikelService {
     }
     public Optional<Artikel> findById (long id){
         return artikelRepository.findById(id);
+    }
+    @Transactional
+    public long create(NieuweArtikel nieuweArtikel){
+        try{
+            var artikel= new Artikel(nieuweArtikel.naam(), nieuweArtikel.aankoopprijs(),nieuweArtikel.verkoopprijs());
+            artikelRepository.save(artikel);
+            return artikel.getId();
+        }catch(DataIntegrityViolationException ex){
+            throw new ArtikelBestaatAlException();
+        }
     }
 }
