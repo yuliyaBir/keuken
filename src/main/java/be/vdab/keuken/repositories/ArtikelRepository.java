@@ -14,4 +14,9 @@ public interface ArtikelRepository extends JpaRepository<Artikel, Long> {
         order by a.verkoopprijs
         """)
     List<Artikel> findMetMinimumWinst(BigDecimal winst);
+    @Query("""
+        select min(a.verkoopprijs)
+        from Artikel a    
+        """)
+    BigDecimal findGoedkoopsteVerkoopprijs();
 }
