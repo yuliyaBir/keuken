@@ -3,6 +3,7 @@ package be.vdab.keuken.services;
 import be.vdab.keuken.domain.Artikel;
 import be.vdab.keuken.dto.NieuweArtikel;
 import be.vdab.keuken.exceptions.ArtikelBestaatAlException;
+import be.vdab.keuken.exceptions.ArtikelNietGevondenException;
 import be.vdab.keuken.repositories.ArtikelRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -41,5 +42,11 @@ public class ArtikelService {
     }
     public BigDecimal findGoedkoopsteVerkoopprijs(){
         return artikelRepository.findGoedkoopsteVerkoopprijs();
+    }
+    @Transactional
+    public void wijzigVerkoopprijs(long id, BigDecimal verkoopprijs){
+        artikelRepository.findById(id)
+                .orElseThrow(ArtikelNietGevondenException::new)
+                .setVerkoopprijs(verkoopprijs);
     }
 }

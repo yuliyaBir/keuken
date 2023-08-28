@@ -5,6 +5,8 @@ import be.vdab.keuken.dto.NieuweArtikel;
 import be.vdab.keuken.exceptions.ArtikelNietGevondenException;
 import be.vdab.keuken.services.ArtikelService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -38,5 +40,11 @@ public class ArtikelController {
     @GetMapping("verkoopprijzen/goedkoopste")
     BigDecimal findGoedkoopsteVerkoopprijs(){
         return artikelService.findGoedkoopsteVerkoopprijs();
+    }
+    private record GewijzigdeVerkoopprijs(@NotNull @Positive BigDecimal verkoopprijs){}
+    @PatchMapping("{id}/verkoopprijs")
+    void wijzigVerkoopprijs(@PathVariable long id,
+                            @RequestBody @Valid GewijzigdeVerkoopprijs gewijzigdeVerkoopprijs){
+        artikelService.wijzigVerkoopprijs(id, gewijzigdeVerkoopprijs.verkoopprijs);
     }
 }

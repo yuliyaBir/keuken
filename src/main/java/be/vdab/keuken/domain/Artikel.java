@@ -23,6 +23,10 @@ public class Artikel {
     protected Artikel() {
     }
 
+    public void setVerkoopprijs(BigDecimal verkoopprijs) {
+        this.verkoopprijs = verkoopprijs;
+    }
+
     public long getId() {
         return id;
     }
@@ -38,4 +42,5 @@ public class Artikel {
     public BigDecimal getVerkoopprijs() {
         return verkoopprijs;
     }
+
 }
