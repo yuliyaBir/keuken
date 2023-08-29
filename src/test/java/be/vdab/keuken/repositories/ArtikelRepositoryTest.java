@@ -28,7 +28,7 @@ class ArtikelRepositoryTest extends AbstractTransactionalJUnit4SpringContextTest
     }
 
     @Test
-    void findByOnbestaandeIdVandtGeenArtikel() {
+    void findByOnbestaandeIdVindtGeenArtikel() {
         assertThat(artikelRepository.findById(Long.MAX_VALUE)).isEmpty();
     }
 }

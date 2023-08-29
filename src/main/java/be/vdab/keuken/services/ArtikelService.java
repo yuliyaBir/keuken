@@ -1,7 +1,10 @@
 package be.vdab.keuken.services;
 
 import be.vdab.keuken.domain.Artikel;
-import be.vdab.keuken.dto.NieuweArtikel;
+import be.vdab.keuken.domain.FoodArtikel;
+import be.vdab.keuken.domain.NonFoodArtikel;
+import be.vdab.keuken.dto.NieuweFoodArtikel;
+import be.vdab.keuken.dto.NieuweNonFoodArtikel;
 import be.vdab.keuken.exceptions.ArtikelBestaatAlException;
 import be.vdab.keuken.exceptions.ArtikelNietGevondenException;
 import be.vdab.keuken.repositories.ArtikelRepository;
@@ -25,9 +28,27 @@ public class ArtikelService {
         return artikelRepository.findById(id);
     }
     @Transactional
-    public long create(NieuweArtikel nieuweArtikel){
+    public long createFoodArtikel(NieuweFoodArtikel nieuweFoodArtikel){
         try{
-            var artikel= new Artikel(nieuweArtikel.naam(), nieuweArtikel.aankoopprijs(),nieuweArtikel.verkoopprijs());
+            var artikel= new FoodArtikel(
+                    nieuweFoodArtikel.naam(),
+                    nieuweFoodArtikel.aankoopprijs(),
+                    nieuweFoodArtikel.verkoopprijs(),
+                    nieuweFoodArtikel.houdbaarheid());
+            artikelRepository.save(artikel);
+            return artikel.getId();
+        }catch(DataIntegrityViolationException ex){
+            throw new ArtikelBestaatAlException();
+        }
+    }
+    @Transactional
+    public long createNonFoodArtikel(NieuweNonFoodArtikel nieuweNonFoodArtikel){
+        try{
+            var artikel = new NonFoodArtikel(
+                    nieuweNonFoodArtikel.naam(),
+                    nieuweNonFoodArtikel.aankoopprijs(),
+                    nieuweNonFoodArtikel.verkoopprijs(),
+                    nieuweNonFoodArtikel.garantie());
             artikelRepository.save(artikel);
             return artikel.getId();
         }catch(DataIntegrityViolationException ex){

@@ -1,7 +1,8 @@
 package be.vdab.keuken.controllers;
 
 import be.vdab.keuken.domain.Artikel;
-import be.vdab.keuken.dto.NieuweArtikel;
+import be.vdab.keuken.dto.NieuweFoodArtikel;
+import be.vdab.keuken.dto.NieuweNonFoodArtikel;
 import be.vdab.keuken.exceptions.ArtikelNietGevondenException;
 import be.vdab.keuken.services.ArtikelService;
 import jakarta.validation.Valid;
@@ -25,9 +26,13 @@ public class ArtikelController {
         return artikelService.findById(id)
                 .orElseThrow(ArtikelNietGevondenException::new);
     }
-    @PostMapping
-    long create(@RequestBody @Valid NieuweArtikel nieuweArtikel){
-        return artikelService.create(nieuweArtikel);
+    @PostMapping("food")
+    long createFoodArtikel(@RequestBody @Valid NieuweFoodArtikel nieuweArtikel){
+        return artikelService.createFoodArtikel(nieuweArtikel);
+    }
+    @PostMapping("nonfood")
+    long createNonFoodArtikel(@RequestBody @Valid NieuweNonFoodArtikel nieuweArtikel){
+        return artikelService.createNonFoodArtikel(nieuweArtikel);
     }
     @GetMapping(params = "naamBevat")
     List<Artikel> findByNaamBevat (String naamBevat){
