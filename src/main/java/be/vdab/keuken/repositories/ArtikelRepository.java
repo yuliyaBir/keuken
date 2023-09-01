@@ -19,5 +19,4 @@ public interface ArtikelRepository extends JpaRepository<Artikel, Long> {
         from Artikel a    
         """)
     BigDecimal findGoedkoopsteVerkoopprijs();
-
 }

@@ -10,5 +10,6 @@ import java.math.BigDecimal;
 public record NieuweNonFoodArtikel (@NotBlank String naam,
                                     @NotNull @PositiveOrZero BigDecimal aankoopprijs,
                                     @NotNull @PositiveOrZero BigDecimal verkoopprijs,
-                                    @NotNull @PositiveOrZero int garantie){
+                                    @NotNull @PositiveOrZero int garantie,
+                                    @NotNull @Positive long artikelgroepId){
 }

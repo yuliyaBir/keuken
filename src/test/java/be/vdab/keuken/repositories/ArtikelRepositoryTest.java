@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.*;
 @DataJpaTest
-@Sql("/artikels.sql")
+@Sql({"/artikelgroepen.sql","/artikels.sql"})
 class ArtikelRepositoryTest extends AbstractTransactionalJUnit4SpringContextTests {
     private final String ARTIKELS = "artikels";
     private final ArtikelRepository artikelRepository;

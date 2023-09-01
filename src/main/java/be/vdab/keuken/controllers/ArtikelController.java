@@ -4,6 +4,7 @@ import be.vdab.keuken.domain.Artikel;
 import be.vdab.keuken.dto.NieuweFoodArtikel;
 import be.vdab.keuken.dto.NieuweNonFoodArtikel;
 import be.vdab.keuken.exceptions.ArtikelNietGevondenException;
+import be.vdab.keuken.exceptions.ArtikelgroepInArtikelNietGevondenException;
 import be.vdab.keuken.services.ArtikelService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -11,7 +12,6 @@ import jakarta.validation.constraints.Positive;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.stream.Stream;
 
 @RestController
@@ -23,8 +23,8 @@ public class ArtikelController {
         this.artikelService = artikelService;
     }
     @GetMapping("{id}")
-    Artikel findById(@PathVariable long id){
-        return artikelService.findById(id)
+    ArtikelBeknopt findById(@PathVariable long id){
+        return artikelService.findById(id).map(artikel -> new ArtikelBeknopt(artikel))
                 .orElseThrow(ArtikelNietGevondenException::new);
     }
     @PostMapping("food")
@@ -59,6 +59,12 @@ public class ArtikelController {
     void wijzigVerkoopprijs(@PathVariable long id,
                             @RequestBody @Valid GewijzigdeVerkoopprijs gewijzigdeVerkoopprijs){
         artikelService.wijzigVerkoopprijs(id, gewijzigdeVerkoopprijs.verkoopprijs);
+    }
+    @GetMapping("{id}/artikelGroepNaam")
+    String findArtikelgroepNaamByArtikelId(@PathVariable long id){
+        return artikelService.findById(id)
+                .map(artikel -> artikel.getArtikelgroep().getNaam())
+                .orElseThrow(ArtikelNietGevondenException::new);
     }
 
 }

@@ -7,7 +7,9 @@ import be.vdab.keuken.dto.NieuweFoodArtikel;
 import be.vdab.keuken.dto.NieuweNonFoodArtikel;
 import be.vdab.keuken.exceptions.ArtikelBestaatAlException;
 import be.vdab.keuken.exceptions.ArtikelNietGevondenException;
+import be.vdab.keuken.exceptions.ArtikelgroepInArtikelNietGevondenException;
 import be.vdab.keuken.repositories.ArtikelRepository;
+import be.vdab.keuken.repositories.ArtikelgroepRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,9 +22,11 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class ArtikelService {
     private final ArtikelRepository artikelRepository;
+    private final ArtikelgroepRepository artikelgroepRepository;
 
-    public ArtikelService(ArtikelRepository artikelRepository) {
+    public ArtikelService(ArtikelRepository artikelRepository, ArtikelgroepRepository artikelgroepRepository) {
         this.artikelRepository = artikelRepository;
+        this.artikelgroepRepository = artikelgroepRepository;
     }
     public Optional<Artikel> findById (long id){
         return artikelRepository.findById(id);
@@ -30,11 +34,13 @@ public class ArtikelService {
     @Transactional
     public long createFoodArtikel(NieuweFoodArtikel nieuweFoodArtikel){
         try{
+            var artikelgroep = artikelgroepRepository.findById(nieuweFoodArtikel.artikelgroepId())
+                    .orElseThrow(ArtikelgroepInArtikelNietGevondenException::new);
             var artikel= new FoodArtikel(
                     nieuweFoodArtikel.naam(),
                     nieuweFoodArtikel.aankoopprijs(),
                     nieuweFoodArtikel.verkoopprijs(),
-                    nieuweFoodArtikel.houdbaarheid());
+                    nieuweFoodArtikel.houdbaarheid(), artikelgroep);
             artikelRepository.save(artikel);
             return artikel.getId();
         }catch(DataIntegrityViolationException ex){
@@ -44,11 +50,12 @@ public class ArtikelService {
     @Transactional
     public long createNonFoodArtikel(NieuweNonFoodArtikel nieuweNonFoodArtikel){
         try{
+            var artikelgroep = artikelgroepRepository.findById(nieuweNonFoodArtikel.artikelgroepId()).orElseThrow(ArtikelgroepInArtikelNietGevondenException::new);
             var artikel = new NonFoodArtikel(
                     nieuweNonFoodArtikel.naam(),
                     nieuweNonFoodArtikel.aankoopprijs(),
                     nieuweNonFoodArtikel.verkoopprijs(),
-                    nieuweNonFoodArtikel.garantie());
+                    nieuweNonFoodArtikel.garantie(), artikelgroep);
             artikelRepository.save(artikel);
             return artikel.getId();
         }catch(DataIntegrityViolationException ex){

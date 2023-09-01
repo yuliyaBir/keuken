@@ -10,8 +10,8 @@ import java.math.BigDecimal;
 public class FoodArtikel extends Artikel{
     private int houdbaarheid;
 
-    public FoodArtikel(String naam, BigDecimal aankoopprijs, BigDecimal verkoopprijs, int houdbaarheid) {
-        super(naam, aankoopprijs, verkoopprijs);
+    public FoodArtikel(String naam, BigDecimal aankoopprijs, BigDecimal verkoopprijs, int houdbaarheid, Artikelgroep artikelgroep) {
+        super(naam, aankoopprijs, verkoopprijs, artikelgroep);
         this.houdbaarheid = houdbaarheid;
     }
 
