@@ -1,10 +1,12 @@
 package be.vdab.keuken.domain;
 
 import jakarta.persistence.*;
+import org.springframework.core.annotation.Order;
 
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -26,7 +28,6 @@ public abstract class Artikel {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "artikelgroepId")
     private Artikelgroep artikelgroep;
-
 
     public Artikel(String naam, BigDecimal aankoopprijs, BigDecimal verkoopprijs, Artikelgroep artikelgroep) {
         this.naam = naam;
@@ -65,4 +66,18 @@ public abstract class Artikel {
     public Artikelgroep getArtikelgroep() {
         return artikelgroep;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Artikel artikel)) return false;
+        return artikel.naam.equalsIgnoreCase(naam);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(naam.toLowerCase());
+    }
 }
+
+

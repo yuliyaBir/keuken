@@ -1,10 +1,11 @@
 package be.vdab.keuken.controllers;
 
 import be.vdab.keuken.domain.Artikel;
+import be.vdab.keuken.domain.Artikelgroep;
+import be.vdab.keuken.dto.ArtikelBeknopt;
 import be.vdab.keuken.dto.NieuweFoodArtikel;
 import be.vdab.keuken.dto.NieuweNonFoodArtikel;
 import be.vdab.keuken.exceptions.ArtikelNietGevondenException;
-import be.vdab.keuken.exceptions.ArtikelgroepInArtikelNietGevondenException;
 import be.vdab.keuken.services.ArtikelService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -22,6 +23,11 @@ public class ArtikelController {
     public ArtikelController(ArtikelService artikelService) {
         this.artikelService = artikelService;
     }
+    private record ArtikelBeknoptMetArtikelgroep(long id, String naam, BigDecimal verkoopprijs, String artikelgroepNaam){
+        private ArtikelBeknoptMetArtikelgroep(Artikel artikel) {
+            this(artikel.getId(), artikel.getNaam(), artikel.getVerkoopprijs(), artikel.getArtikelgroep().getNaam());
+        }
+    }
     @GetMapping("{id}")
     ArtikelBeknopt findById(@PathVariable long id){
         return artikelService.findById(id).map(artikel -> new ArtikelBeknopt(artikel))
@@ -35,15 +41,11 @@ public class ArtikelController {
     long createNonFoodArtikel(@RequestBody @Valid NieuweNonFoodArtikel nieuweArtikel){
         return artikelService.createNonFoodArtikel(nieuweArtikel);
     }
-    private record ArtikelBeknopt(long id, String naam, BigDecimal verkoopprijs){
-        private ArtikelBeknopt (Artikel artikel){
-            this(artikel.getId(), artikel.getNaam(), artikel.getVerkoopprijs());
-        }
-    }
+
     @GetMapping(params = "naamBevat")
-    Stream<ArtikelBeknopt> findByNaamBevat (String naamBevat){
+    Stream<ArtikelBeknoptMetArtikelgroep> findByNaamBevat (String naamBevat){
         return artikelService.findByNaamBevat(naamBevat)
-                .stream().map(artikel -> new ArtikelBeknopt(artikel));
+                .stream().map(artikel -> new ArtikelBeknoptMetArtikelgroep(artikel));
     }
     @GetMapping(params = "minimumWinst")
     Stream<ArtikelBeknopt> findMetMinimumWinst(BigDecimal minimumWinst){
@@ -66,5 +68,4 @@ public class ArtikelController {
                 .map(artikel -> artikel.getArtikelgroep().getNaam())
                 .orElseThrow(ArtikelNietGevondenException::new);
     }
-
 }
